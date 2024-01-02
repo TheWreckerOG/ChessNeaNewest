@@ -39,7 +39,7 @@ public class Pawn extends Piece{
             }
 
             if(currentCandidateOffset ==8 && !board.getTile(candidateDestinationCoordinate).isTileOccupied()){
-                LegalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
+                LegalMoves.add(new PawnMove(board, this, candidateDestinationCoordinate));
             }
 
             else if(currentCandidateOffset == 16 && this.isFirstMove() &&

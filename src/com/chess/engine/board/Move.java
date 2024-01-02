@@ -58,6 +58,9 @@ public abstract class Move {
                 getMovedPiece().equals(otherMove.getMovedPiece());
     }
 
+    public Board getBoard() {
+        return this.board;
+    }
     public int getCurrentCoords(){
         return this.movedPiece.getPiecePosition();
     }
@@ -96,6 +99,22 @@ public abstract class Move {
         return builder.build();
     }
 
+    public static class MajorMove extends Move{
+        public MajorMove(final Board board, final Piece movedPiece, final int destinedCoordinate) {
+            super(board, movedPiece, destinedCoordinate);
+        }
+
+        @Override
+        public boolean equals(final Object other){
+            return this == other || other instanceof MajorMove && super.equals(other);
+        }
+
+        @Override
+        public String toString(){
+            return movedPiece.getPieceType().toString() + BoardUtils.getPositionAtCoordinate(this.destinedCoordinate);
+        }
+    }
+
     public static class  MajorAttackMove extends Attack{
 
         public MajorAttackMove(final Board board, final Piece pieceMoved,
@@ -111,22 +130,6 @@ public abstract class Move {
         @Override
         public String toString(){
             return movedPiece.getPieceType() + BoardUtils.getPositionAtCoordinate(this.destinedCoordinate);
-        }
-    }
-
-    public static final class MajorMove extends Move{
-        public MajorMove(final Board board, final Piece movedPiece, final int destinedCoordinate) {
-            super(board, movedPiece, destinedCoordinate);
-        }
-
-        @Override
-        public boolean equals(final Object other){
-            return this == other || other instanceof MajorMove && super.equals(other);
-        }
-
-        @Override
-        public String toString(){
-            return movedPiece.getPieceType().toString() + BoardUtils.getPositionAtCoordinate(this.destinedCoordinate);
         }
     }
 
@@ -156,12 +159,12 @@ public abstract class Move {
         }
 
         @Override
-        public Piece getAttackedPiece() {
-            return this.AttackedPiece;
-        }
-        @Override
         public boolean isAttack() {
             return true;
+        }
+        @Override
+        public Piece getAttackedPiece() {
+            return this.AttackedPiece;
         }
     }
 
@@ -379,7 +382,7 @@ public abstract class Move {
 
     public static final class NullMove extends Move{
         public NullMove(){
-            super(null,65);
+            super(null,-1);
         }
         @Override
         public int getCurrentCoords(){

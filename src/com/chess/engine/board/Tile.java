@@ -80,6 +80,6 @@ public abstract class Tile {
         public Piece getPiece(){
             return this.pieceOnTile;
         }
-    }   
+    }
 }
 

@@ -55,7 +55,7 @@ public class Knight extends Piece {
                     final Team PieceTeam = pieceAtDestination.getPieceTeam();
 
                     if(this.pieceTeam != PieceTeam){
-                        LegalMoves.add(new Attack(board, this, candidateDestinationCoordinate, pieceAtDestination));
+                        LegalMoves.add(new MajorAttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                     }
                 }
             }

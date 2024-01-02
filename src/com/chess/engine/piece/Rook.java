@@ -4,6 +4,7 @@ import com.chess.engine.Team;
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
+import com.chess.engine.board.Move.MajorAttackMove;
 import com.chess.engine.board.Tile;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,7 +56,7 @@ public class Rook extends Piece{
                         final Team PieceTeam = pieceAtDestination.getPieceTeam();
 
                         if(this.pieceTeam != PieceTeam){
-                            LegalMoves.add(new Move.Attack(board, this, PossibleDestination, pieceAtDestination));
+                            LegalMoves.add(new MajorAttackMove(board, this, PossibleDestination, pieceAtDestination));
                         }
 
                         break;

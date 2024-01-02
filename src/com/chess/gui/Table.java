@@ -9,7 +9,6 @@ import com.chess.engine.player.MoveTransition;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +39,7 @@ public class Table {
     private BoardDirection boardDirection;
 
     private boolean highlightLegalMoves;
+    private boolean pieceChangeOption;
 
     private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(600,600);
     private final static Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
@@ -62,6 +62,7 @@ public class Table {
         this.chessBoard = Board.createStandardBoard();
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = false;
+        this.pieceChangeOption = false;
         this.boardPanel = new BoardPanel();
         this.moveLog = new MoveLog();
         this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
@@ -117,7 +118,18 @@ public class Table {
         });
 
         preferencesMenu.add(flipBoardMenu);
+        preferencesMenu.addSeparator();
 
+        final JCheckBoxMenuItem changePieceButton = new JCheckBoxMenuItem("Change Piece Design", false);
+        changePieceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                pieceChangeOption = changePieceButton.isSelected();
+                boardPanel.drawBoard(chessBoard);
+            }
+        });
+
+        preferencesMenu.add(changePieceButton);
         preferencesMenu.addSeparator();
 
         final JCheckBoxMenuItem legalMoveHighlighterCheckbox = new JCheckBoxMenuItem("Highlight legal moves", false);
@@ -312,14 +324,18 @@ public class Table {
             this.removeAll();
             if (board.getTile(this.tileId).isTileOccupied()){
                 try {
-                    final BufferedImage image = ImageIO.read(new File(defaultPieceImagePath +
-                            board.getTile(this.tileId).getPiece().getPieceTeam().toString().substring(0, 1) +
-                            board.getTile(this.tileId).getPiece().toString() + ".gif"));
-
+                    final BufferedImage image;
+                    if (pieceChangeOption) {
+                        image = ImageIO.read(new File("Designs/Stylish/" +
+                                board.getTile(this.tileId).getPiece().getPieceTeam().toString().substring(0, 1) +
+                                board.getTile(this.tileId).getPiece().toString() + ".gif"));
+                    } else {
+                        image = ImageIO.read(new File(defaultPieceImagePath +
+                                board.getTile(this.tileId).getPiece().getPieceTeam().toString().substring(0, 1) +
+                                board.getTile(this.tileId).getPiece().toString() + ".gif"));
+                    }
                     add(new JLabel(new ImageIcon(image)));
-                }
-
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
