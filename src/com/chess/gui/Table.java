@@ -316,6 +316,7 @@ public class Table {
         public void drawTile(final Board board){
             assignTileColour();
             assignTilePiece(board);
+            highlightLegalMoves(board);
             validate();
             repaint();
         }

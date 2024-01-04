@@ -20,27 +20,27 @@ public class TakenPiecesPanel extends JPanel {
     private final JPanel northPanel;
     private final JPanel southPanel;
 
-    private static final Color PANEL_COLOUR = Color.decode("0xFDFE6");
+    private static final Color PANEL_COLOUR = Color.decode("#F5F5F5");
     private static final Dimension TAKEN_PIECES_DIMENSION = new Dimension(40, 80);
     private static final EtchedBorder PANEL_BORDER = new EtchedBorder(EtchedBorder.RAISED);
 
     public TakenPiecesPanel(){
         super(new BorderLayout());
-        this.setBackground(Color.decode("0xFDF5E6"));
-        this.setBorder(PANEL_BORDER);
+        setBackground(Color.decode("#F5F5F5"));
+        setBorder(PANEL_BORDER);
         this.northPanel = new JPanel(new GridLayout(8, 2));
         this.southPanel = new JPanel(new GridLayout(8,2));
         this.northPanel.setBackground(PANEL_COLOUR);
         this.southPanel.setBackground(PANEL_COLOUR);
-        this.add(this.northPanel, BorderLayout.NORTH);
-        this.add(this.southPanel, BorderLayout.SOUTH);
+        add(this.northPanel, BorderLayout.NORTH);
+        add(this.southPanel, BorderLayout.SOUTH);
         setPreferredSize(TAKEN_PIECES_DIMENSION);
     }
 
     public void redo(final MoveLog moveLog) {
 
-        this.northPanel.removeAll();
-        this.southPanel.removeAll();
+        northPanel.removeAll();
+        southPanel.removeAll();
 
         final List<Piece> whiteTakenPieces = new ArrayList<>();
         final List<Piece> blackTakenPieces = new ArrayList<>();
@@ -60,19 +60,19 @@ public class TakenPiecesPanel extends JPanel {
             }
         }
 
-        Collections.sort(whiteTakenPieces, new Comparator<Piece>() {
+        whiteTakenPieces.sort(new Comparator<Piece>() {
             @Override
-            public int compare(Piece o1, Piece o2) {
+            public int compare(final Piece p1, final Piece p2) {
 
-                return Integer.compare(o1.getPieceValue(), o2.getPieceValue());
+                return Integer.compare(p1.getPieceValue(), p2.getPieceValue());
             }
         });
 
-        Collections.sort(blackTakenPieces, new Comparator<Piece>() {
+        blackTakenPieces.sort(new Comparator<Piece>() {
             @Override
-            public int compare(Piece o1, Piece o2) {
+            public int compare(Piece p1, Piece p2) {
 
-                return Integer.compare(o1.getPieceValue(), o2.getPieceValue());
+                return Integer.compare(p1.getPieceValue(), p2.getPieceValue());
             }
         });
 
@@ -80,9 +80,9 @@ public class TakenPiecesPanel extends JPanel {
             try {
                 final BufferedImage image = ImageIO.read(new File("Designs/Basic/" +
                         takenPiece.getPieceTeam().toString().substring(0, 1) +
-                        "" + takenPiece.toString()));
+                        "" + takenPiece.toString() + ".gif"));
                 final ImageIcon icon = new ImageIcon(image);
-                final JLabel imageLabel = new JLabel();
+                final JLabel imageLabel = new JLabel(icon);
                 this.southPanel.add(imageLabel);
             }
             catch (final IOException e){

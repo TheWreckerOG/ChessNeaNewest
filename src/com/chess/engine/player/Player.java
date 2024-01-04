@@ -101,7 +101,7 @@ public abstract class Player {
                 transitionBoard.currentPlayer().getOpponent().getPlayerKing().getPiecePosition(),
                 transitionBoard.currentPlayer().getLegalMoves());
 
-        if (kingAttacks.isEmpty()){
+        if (!kingAttacks.isEmpty()){
             return new MoveTransition(this.board,this.board, move, MoveStatus.LEAVES_PLAYER_IN_CHECK);
         }
 

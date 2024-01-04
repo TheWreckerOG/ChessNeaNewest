@@ -51,13 +51,13 @@ public class GameHistoryPanel extends JPanel{
 
         if (moveHistory.getMoves().size() > 0){
             final Move lastMove = moveHistory.getMoves().get(moveHistory.size() - 1);
-            final String movetext = lastMove.toString();
+            final String moveText = lastMove.toString();
 
             if (lastMove.getMovedPiece().getPieceTeam().isWhite()){
-                this.model.setValueAt(movetext + calculateCheckAndCheckMate(board), currentRow, 0);
+                this.model.setValueAt(moveText + calculateCheckAndCheckMate(board), currentRow, 0);
             }
             else if (lastMove.getMovedPiece().getPieceTeam().isBlack()) {
-                this.model.setValueAt(movetext + calculateCheckAndCheckMate(board), currentRow - 1, 1);
+                this.model.setValueAt(moveText + calculateCheckAndCheckMate(board), currentRow - 1, 1);
             }
         }
 
@@ -69,11 +69,9 @@ public class GameHistoryPanel extends JPanel{
         if (board.currentPlayer().isInCheckMate()){
             return "#";
         }
-
         else if (board.currentPlayer().isInCheck()){
             return "+";
         }
-
         return "";
     }
 
@@ -163,8 +161,8 @@ public class GameHistoryPanel extends JPanel{
         private String blackMove;
 
         Row(){
-
         }
+
         public String getWhiteMove(){
             return this.whiteMove;
         }

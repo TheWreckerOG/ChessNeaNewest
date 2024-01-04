@@ -171,7 +171,7 @@ public class Board {
         return builder.build();
     }
 
-    public Iterable<Move> getAllLegalMoves() {
+    public Collection<Move> getAllLegalMoves() {
         List<Move> allLegalMoves = new ArrayList<>();
         allLegalMoves.addAll(this.whitePlayer.getLegalMoves());
         allLegalMoves.addAll(this.blackPlayer.getLegalMoves());

@@ -60,7 +60,7 @@ public abstract class Move {
         return this.board;
     }
     public int getCurrentCoords(){
-        return this.getMovedPiece() .getPiecePosition();
+        return this.movedPiece.getPiecePosition();
     }
     public int getDestinationCoords() {
         return this.destinedCoordinate;
@@ -157,12 +157,12 @@ public abstract class Move {
         }
 
         @Override
-        public boolean isAttack() {
-            return true;
-        }
-        @Override
         public Piece getAttackedPiece() {
             return this.AttackedPiece;
+        }
+        @Override
+        public boolean isAttack() {
+            return true;
         }
     }
 
@@ -235,7 +235,6 @@ public abstract class Move {
     }
 
     public static class PawnPromotion extends Move{
-
         final Move decoratedMove;
         final Pawn promotedPawn;
 
@@ -306,7 +305,7 @@ public abstract class Move {
             for (final Piece piece : this.board.currentPlayer().getOpponent().getActivePieces()){
                 builder.setPiece(piece);
             }
-            final Pawn movedPawn = (Pawn)this.movedPiece.movePiece(this);
+            final Pawn movedPawn = (Pawn) this.movedPiece.movePiece(this);
             builder.setPiece(movedPawn);
             builder.setEnPassantPawn(movedPawn);
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getTeam());
