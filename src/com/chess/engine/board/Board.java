@@ -16,18 +16,21 @@ import java.util.Map;
 
 public class Board {
 
-    private final List<Tile> boardConfig;
+    private final List<Tile> gameBoard;
     private final Collection<Piece> whitePieces;
     private final Collection<Piece> blackPieces;
 
     private final WhitePlayer whitePlayer;
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
+    private final Pawn enPassantPawn;
 
     private Board(Builder builder){
-        this.boardConfig = createGameBoard(builder);
-        this.whitePieces = calculateActivePieces(builder, Team.WHITE);
-        this.blackPieces = calculateActivePieces(builder, Team.BLACK);
+        this.gameBoard = createGameBoard(builder);
+        this.whitePieces = calculateActivePieces(this.gameBoard, Team.WHITE);
+        this.blackPieces = calculateActivePieces(this.gameBoard, Team.BLACK);
+
+        this.enPassantPawn = builder.enPassantPawn;
 
         final Collection<Move> whiteStandardLegalMoves = calculateLegalMoves(this.whitePieces);
         final Collection<Move> blackStandardLegalMoves = calculateLegalMoves(this.blackPieces);
@@ -44,7 +47,7 @@ public class Board {
 
         for(int i = 0; i < BoardUtils.Num_Tiles; i++){
 
-            final String tileText = this.boardConfig.get(i).toString();
+            final String tileText = this.gameBoard.get(i).toString();
             builder.append(String.format("%3s", tileText));
 
             if((i + 1) % BoardUtils.Num_Tiles_Row == 0){
@@ -73,18 +76,22 @@ public class Board {
     public Player currentPlayer(){
         return this.currentPlayer;
     }
+    public Pawn getEnPassantPawn(){
+        return this.enPassantPawn;
+    }
 
-    private static Collection<Piece> calculateActivePieces(final Builder builder, final Team team){
+    private static Collection<Piece> calculateActivePieces(final List<Tile> gameBoard, final Team team){
 
         final List<Piece> activePieces = new ArrayList<>();
 
-        for(final Piece piece: builder.boardConfig.values()){
-
-            if(piece.getPieceTeam() == team){
-                activePieces.add(piece);
+        for(final Tile tile: gameBoard) {
+            if (tile.isTileOccupied()) {
+                final Piece piece = tile.getPiece();
+                if (piece.getPieceTeam() == team) {
+                    activePieces.add(piece);
+                }
             }
         }
-
         return Collections.unmodifiableList(activePieces);
     }
 
@@ -103,7 +110,7 @@ public class Board {
 
     public Tile getTile(final int tileCoordinate){
 
-        return boardConfig.get(tileCoordinate);
+        return gameBoard.get(tileCoordinate);
     }
 
     private static List<Tile> createGameBoard(final Builder builder){

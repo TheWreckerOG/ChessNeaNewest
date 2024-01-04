@@ -6,13 +6,11 @@ import com.chess.engine.piece.Pawn;
 import com.chess.engine.piece.Piece;
 import com.chess.engine.piece.Rook;
 
-import java.util.Objects;
-
 public abstract class Move {
 
     protected final Board board;
-    protected final int destinedCoordinate;
     protected final Piece movedPiece;
+    protected final int destinedCoordinate;
     protected final boolean isFirstMove;
 
     public static final Move NULL_MOVE = new NullMove();
@@ -20,8 +18,8 @@ public abstract class Move {
     private Move(final Board board, final Piece movedPiece, final int destinedCoordinate){
 
         this.board = board;
-        this.destinedCoordinate = destinedCoordinate;
         this.movedPiece = movedPiece;
+        this.destinedCoordinate = destinedCoordinate;
         this.isFirstMove = movedPiece.isFirstMove();
     }
 
@@ -62,7 +60,7 @@ public abstract class Move {
         return this.board;
     }
     public int getCurrentCoords(){
-        return this.movedPiece.getPiecePosition();
+        return this.getMovedPiece() .getPiecePosition();
     }
     public int getDestinationCoords() {
         return this.destinedCoordinate;
@@ -233,6 +231,57 @@ public abstract class Move {
             builder.setPiece(this.movedPiece.movePiece(this));
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getTeam());
             return builder.build();
+        }
+    }
+
+    public static class PawnPromotion extends Move{
+
+        final Move decoratedMove;
+        final Pawn promotedPawn;
+
+        public PawnPromotion(final Move decoratedMove) {
+            super(decoratedMove.getBoard(), decoratedMove.getMovedPiece(), decoratedMove.getDestinationCoords());
+            this.decoratedMove = decoratedMove;
+            this.promotedPawn = (Pawn) decoratedMove.getMovedPiece();
+        }
+
+        @Override
+        public int hashCode(){
+            return decoratedMove.hashCode() + (31 * promotedPawn.hashCode());
+        }
+        @Override
+        public boolean equals(final Object other){
+            return this == other || other instanceof PawnPromotion && (super.equals(other));
+        }
+        @Override
+        public Board execute(){
+            final Board pawnMovedBoard = this.decoratedMove.execute();
+            final Builder builder = new Builder();
+            for (final Piece piece : pawnMovedBoard.currentPlayer().getActivePieces()){
+                if(!this.promotedPawn.equals(piece)){
+                    builder.setPiece(piece);
+                }
+            }
+            for (final Piece piece : pawnMovedBoard.currentPlayer().getOpponent().getActivePieces()){
+                builder.setPiece(piece);
+            }
+
+            builder.setPiece(this.promotedPawn.getPromotionPiece().movePiece(this));
+            builder.setMoveMaker(pawnMovedBoard.currentPlayer().getTeam());
+
+            return builder.build();
+        }
+        @Override
+        public boolean isAttack(){
+            return this.decoratedMove.isAttack();
+        }
+        @Override
+        public Piece getAttackedPiece(){
+            return this.decoratedMove.getAttackedPiece();
+        }
+        @Override
+        public String toString(){
+            return "";
         }
     }
 
