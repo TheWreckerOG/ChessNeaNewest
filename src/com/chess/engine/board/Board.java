@@ -195,9 +195,8 @@ public class Board {
             this.nextMoveMaker = nextMoveMaker;
             return this;
         }
-        public Builder setEnPassantPawn(Pawn enPassantPawn) {
+        public void setEnPassantPawn(Pawn enPassantPawn) {
             this.enPassantPawn = enPassantPawn;
-            return this;
         }
         public Board build(){
             return new Board(this);
