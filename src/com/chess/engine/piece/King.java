@@ -16,12 +16,35 @@ public class King extends Piece{
 
     private final static int[] Candidate_Move_Coordinates = {-9,-8,-7,-1,1,7,8,9};
 
-    public King(final Team pieceTeam, final int piecePosition) {
+    private final boolean isCastled;
+    private final boolean kingSideCastleCapable;
+    private final boolean queenSideCastleCapable;
+
+    public King(final Team pieceTeam, final int piecePosition, final boolean kingSideCastleCapable,
+                final boolean queenSideCastleCapable) {
         super(PieceType.KING, piecePosition, pieceTeam, true);
+        this.isCastled = false;
+        this.kingSideCastleCapable = kingSideCastleCapable;
+        this.queenSideCastleCapable = queenSideCastleCapable;
     }
 
-    public King(final Team pieceTeam, final int piecePosition, final boolean isFirstMove) {
+    public King(final Team pieceTeam, final int piecePosition, final boolean isFirstMove, final boolean isCastled,
+                final boolean kingSideCastleCapable,
+                final boolean queenSideCastleCapable) {
         super(PieceType.KING, piecePosition, pieceTeam, isFirstMove);
+        this.isCastled = isCastled;
+        this.kingSideCastleCapable = kingSideCastleCapable;
+        this.queenSideCastleCapable = queenSideCastleCapable;
+    }
+
+    public boolean isCastled(){
+        return this.isCastled;
+    }
+    public boolean isKingSideCastleCapable(){
+        return this.kingSideCastleCapable;
+    }
+    public boolean isQueenSideCastleCapable(){
+        return this.queenSideCastleCapable;
     }
 
     @Override
@@ -61,7 +84,8 @@ public class King extends Piece{
 
     @Override
     public King movePiece(final Move move) {
-        return new King(move.getMovedPiece().pieceTeam, move.getDestinationCoords());
+        return new King(move.getMovedPiece().pieceTeam, move.getDestinationCoords(),
+                false, move.isCastlingMove(), false, false);
     }
 
     @Override

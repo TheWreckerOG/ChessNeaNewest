@@ -90,6 +90,13 @@ public abstract class Player {
         return false;
     }
 
+    public boolean isKingSideCastleCapable(){
+        return this.playerKing.isKingSideCastleCapable();
+    }
+    public boolean isQueenSideCastleCapable(){
+        return this.playerKing.isQueenSideCastleCapable();
+    }
+
     public MoveTransition makeMove(final Move move){
         if(!this.LegalMoves.contains(move)){
             return new MoveTransition(this.board, this.board, move, MoveStatus.ILLEGAL_MOVE);

@@ -71,6 +71,7 @@ public class Table extends Observable {
         this.pieceChangeOption = false;
         this.boardPanel = new BoardPanel();
         this.moveLog = new MoveLog();
+        this.addObserver(new TableGameAIWatcher());
         this.gameSetup = new GameSetup(this.gameFrame, true);
         this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
@@ -87,7 +88,6 @@ public class Table extends Observable {
         Table.get().getGameHistoryPanel().redo(chessBoard, Table.get().getMoveLog());
         Table.get().getTakenPiecesPanel().redo(Table.get().getMoveLog());
         Table.get().getBoardPanel().drawBoard(Table.get().getGameBoard());
-        Table.get().getDebugPanel().redo();
     }
 
     private GameSetup getGameSetup() {
@@ -102,6 +102,7 @@ public class Table extends Observable {
         final JMenuBar tableMenuBar =  new JMenuBar();
         tableMenuBar.add(createFileMenu());
         tableMenuBar.add(createPreferencesMenu());
+        tableMenuBar.add(createOptionsMenu());
         return tableMenuBar;
     }
 
@@ -200,20 +201,19 @@ public class Table extends Observable {
 
             if (Table.get().getGameSetup().isAIPlayer(Table.get().getGameBoard().currentPlayer()) &&
                     !Table.get().getGameBoard().currentPlayer().isInCheckMate() &&
-                    !Table.get().getGameBoard().currentPlayer().isInStaleMate()){
+                    !Table.get().getGameBoard().currentPlayer().isInStaleMate()) {
 
-                final AIThinkTank thinkTank = new AIThinkTank(){
+                final AIThinkTank thinkTank = new AIThinkTank();
                     thinkTank.execute();
                 }
 
-                if (Table.get().getGameBoard().currentPlayer().isInCheckMate()){
+                if (Table.get().getGameBoard().currentPlayer().isInCheckMate()) {
                     System.out.println("Game Over " + Table.get().getGameBoard().currentPlayer() + " is in checkmate");
                 }
 
-                if (Table.get().getGameBoard().currentPlayer().isInStaleMate()){
+                if (Table.get().getGameBoard().currentPlayer().isInStaleMate()) {
                     System.out.println("Game Over " + Table.get().getGameBoard().currentPlayer() + " is in stalemate");
                 }
-            }
         }
     }
 
@@ -236,7 +236,8 @@ public class Table extends Observable {
         return this.boardPanel;
     }
     private void moveMadeUpdate(final PlayerType playerType){
-
+        setChanged();
+        notifyObservers(playerType);
     }
 
     private static class AIThinkTank extends SwingWorker<Move, String>{
@@ -381,15 +382,11 @@ public class Table extends Observable {
                 public void mouseClicked(final MouseEvent event) {
 
                     if (isRightMouseButton(event)) {
-
                         sourceTile = null;
                         humanMove = null;
-                        System.out.println("Right click");
                     }
 
                     else if (isLeftMouseButton(event)) {
-                        System.out.println("left");
-
                         if (sourceTile == null) {
                             sourceTile = chessBoard.getTile(tileId);
                             humanMove = sourceTile.getPiece();
@@ -412,6 +409,7 @@ public class Table extends Observable {
                             }
 
                             sourceTile = null;
+                            destinationTile = null;
                             humanMove = null;
                         }
 
@@ -420,7 +418,13 @@ public class Table extends Observable {
                             public void run() {
                                 gameHistoryPanel.redo(chessBoard, moveLog);
                                 takenPiecesPanel.redo(moveLog);
+
+                                if (gameSetup.isAIPlayer(chessBoard.currentPlayer())){
+                                    Table.get().moveMadeUpdate(PlayerType.HUMAN);
+                                }
+
                                 boardPanel.drawBoard(chessBoard);
+
                             }
                         });
                     }

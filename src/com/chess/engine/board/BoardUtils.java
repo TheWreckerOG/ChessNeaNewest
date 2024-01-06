@@ -1,14 +1,11 @@
 package com.chess.engine.board;
 
 import java.util.*;
-
 public class BoardUtils {
-
     public static final boolean[] First_Column = initColumn(0);
     public static final boolean[] Second_Column = initColumn(1);
     public static final boolean[] Seventh_Column = initColumn(6);
     public static final boolean[] Eighth_Column = initColumn(7);
-
     public static final boolean[] Eighth_Row = initRow(0);
     public static final boolean[] Seventh_Row = initRow(8);
     public static final boolean[] Sixth_Row = initRow(16);
@@ -17,19 +14,13 @@ public class BoardUtils {
     public static final boolean[] Third_Row = initRow(40);
     public static final boolean[] Second_Row = initRow(48);
     public static final boolean[] First_Row = initRow(56);
-
     public static final String[] ALGEBRAIC_NOTATION = initialiseAlgebraicNotation();
     public static final Map<String, Integer> POSITION_TO_COORDINATE = initialisePositionToCoordinateMap();
-
-
     public static final int Num_Tiles = 64;
     public static final int Num_Tiles_Row = 8;
-
     private BoardUtils(){
-
         throw new RuntimeException("Cant Do that");
     }
-
     private static String[] initialiseAlgebraicNotation(){
         return new String[]{
                 "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
@@ -42,54 +33,38 @@ public class BoardUtils {
                 "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"
         };
     }
-
     private static Map<String, Integer> initialisePositionToCoordinateMap() {
         final Map<String, Integer> positionToCoordinate = new HashMap<>();
-
         for (int i = 0; i < Num_Tiles; i++) {
             positionToCoordinate.put(ALGEBRAIC_NOTATION[i], i);
         }
-
         return Collections.unmodifiableMap(positionToCoordinate);
     }
-
     private static boolean[] initColumn(int ColumnNumber) {
-
         final boolean[] column = new boolean[Num_Tiles];
-
         do{
             column[ColumnNumber] = true;
             ColumnNumber += Num_Tiles_Row;
         }
-
         while(ColumnNumber < Num_Tiles);
         return column;
     }
-
-
-
     private static boolean[] initRow(int rowNumber){
-
         final boolean[] row = new boolean[Num_Tiles];
         Arrays.fill(row, false);
         do{
-
             row[rowNumber] = true;
             rowNumber++;
         }
         while(rowNumber % Num_Tiles_Row != 0);
-
         return row;
     }
-
     public static boolean isValidTile(final int coordinate) {
         return coordinate >= 0 && coordinate < Num_Tiles;
     }
-
     public static int getCoordinateAtPosition(final String position){
         return POSITION_TO_COORDINATE.get(position);
     }
-
     public static String getPositionAtCoordinate(final int coordinate){
         return ALGEBRAIC_NOTATION[coordinate];
     }
