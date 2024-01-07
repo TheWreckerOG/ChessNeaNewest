@@ -1,7 +1,5 @@
 package com.chess.engine.player;
-
 import com.chess.engine.board.Move;
-
 public enum MoveStatus {
     DONE{
         @Override
@@ -21,6 +19,5 @@ public enum MoveStatus {
             return false;
         }
     };
-
     public abstract boolean isDone();
 }

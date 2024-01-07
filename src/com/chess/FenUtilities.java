@@ -1,20 +1,15 @@
 package com.chess;
-
 import com.chess.engine.board.Board;
 import com.chess.engine.board.BoardUtils;
 import com.chess.engine.piece.Pawn;
 import com.chess.engine.piece.Piece;
-
 public class FenUtilities {
-
     private FenUtilities(){
         throw new RuntimeException("Not instantiable");
     }
-
     public static Board createGameFromFEN(final String fenString){
         return null;
     }
-
     public static String createFENFromGame(final Board board){
         return calculateBoardText(board) + " " +
                 calculateCurrentPlayerText(board) +" "+
@@ -22,10 +17,8 @@ public class FenUtilities {
                 calculateEnPassantSquare(board) + " " +
                 "0 1";
     }
-
     private static String calculateBoardText(Board board) {
         final StringBuilder builder = new StringBuilder();
-
         for (int i = 0; i < BoardUtils.Num_Tiles; i++){
             final String tileText = board.getTile(i).toString();
             builder.append(tileText);
@@ -37,7 +30,6 @@ public class FenUtilities {
         builder.insert(44, "/");
         builder.insert(53, "/");
         builder.insert(62, "/");
-
         return builder.toString().replaceAll("--------","8")
                 .replaceAll("-------","7")
                 .replaceAll("------","6")
@@ -47,20 +39,16 @@ public class FenUtilities {
                 .replaceAll("--","2")
                 .replaceAll("-", "1");
     }
-
     private static String calculateEnPassantSquare(final Board board) {
         final Pawn enPassantPawn = board.getEnPassantPawn();
-
         if (enPassantPawn != null){
             return BoardUtils.getPositionAtCoordinate(enPassantPawn.getPiecePosition() +
                     (8) * enPassantPawn.getPieceTeam().getOppositeDirection());
         }
         return "-";
     }
-
     private static String  calculateCastleText(final Board board) {
         final StringBuilder builder = new StringBuilder();
-
         if (board.whitePlayer().isKingSideCastleCapable()){
             builder.append("K");
         }
@@ -73,13 +61,10 @@ public class FenUtilities {
         if (board.blackPlayer().isQueenSideCastleCapable()){
             builder.append("q");
         }
-
         final String result = builder.toString();
         return result.isEmpty() ? "-" : result;
     }
-
     private static String  calculateCurrentPlayerText(final Board board) {
         return board.currentPlayer().toString().substring(0, 1).toLowerCase();
     }
-
 }
